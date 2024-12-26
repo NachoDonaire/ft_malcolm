@@ -8,7 +8,8 @@ NLBFT = ./libft/libft.a
 DLBFT = ./libft
 
 
-FSRC = main
+FSRC = main \
+       parser
 
 ALLC = $(addsuffix .c, $(FSRC))
 SRC = $(addprefix src/, $(ALLC))
