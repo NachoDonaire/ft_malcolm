@@ -32,6 +32,7 @@ clean :
 
 fclean : clean
 	@make fclean -C $(DLBFT)
+	rm -rf $(NAME)
 
 re : fclean $(NAME)
 

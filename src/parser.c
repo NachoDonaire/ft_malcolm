@@ -97,6 +97,5 @@ int parse_args(char **argv, struct  Target *t, struct Source *s)
 		return (IP_ERR);
 	if (mac_checker(argv[1], &t->mac_addr) == -1 || mac_checker(argv[3], &s->mac_addr) == -1)
 		return (MAC_ERR);
-	printf("eey: %s\n", t->ip_addr);
 	return (OK);
 }

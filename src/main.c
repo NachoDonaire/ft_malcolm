@@ -55,6 +55,7 @@ int main(int argc, char **argv)
 	int	sckt;
 	char	buff[BUFF_SIZE];
 	int	nnreadd;
+	struct sockaddr_ll	sll;
 
 	if (argc != 5 || argv[0] == NULL)
 		return (fatal_error(NARG_ERR));
@@ -68,15 +69,20 @@ int main(int argc, char **argv)
 		return (fatal_error(SOCKET_ERR));
 	while (1)
 	{
-		int nread = recv(sckt, buff, BUFF_SIZE, 0);
-		if (nread > 0)
+		int nread = recvfrom(sckt, buff, BUFF_SIZE, 0, (struct sockaddr *)&sll, (socklen_t*)sizeof((struct sockaddr *)&sll));
+		if (nread < 0)
 		{
-			write_sentence(1, "Ha leido!!\n");
+			//write_sentence(1, "No ha leido!!\n");
+			continue ;
+		}
+		else
+		{
 			nnreadd = nread;
 			break ;
 		}
 	}
 	printf("eeejjj: %d\n", nnreadd);
+	printf("lo que ha leido: %s\n", buff);
 	//print_target(target);
 	//print_source(source);
 	return (0);
