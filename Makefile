@@ -28,11 +28,10 @@ $(NAME) :  $(OBJ)
 
 clean :
 	@make clean -C $(DLBFT)
-	rm -rf /obj/*
+	rm -rf /obj/*.o
 
-fclean :
+fclean : clean
 	@make fclean -C $(DLBFT)
-	rm -rf /obj/* $(NAME)
 
 re : fclean $(NAME)
 
