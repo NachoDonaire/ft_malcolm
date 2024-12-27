@@ -2,51 +2,6 @@
 #include <libft.h>
 #include <parser.h>
 
-int	copy_data(char *src, char *dst, int e)
-{
-	int i;
-	int y;
-
-	i = 0;
-	y = 0;
-	if (e == 0)
-	{
-		while (src[i])
-		{
-			dst[y++] = src[i++];
-			if (src[i] == '.')
-				i++;
-			if (!src[i])
-			{
-				ft_bzero(dst, y);
-				return (IP_ERR);
-			}
-		}
-		return (OK);
-	}
-	while (src[i])
-	{
-		dst[y++] = src[i++];
-		if (src[i] == ':')
-		{
-			i++;
-			if (src[i] == ':')
-				i++;
-			else
-			{
-				ft_bzero(dst, y);
-				return (MAC_ERR);
-			}
-		}
-	}
-	return (OK);
-}
-
-
-
-
-		
-
 int is_str_num(char *s, int e)
 {
 	if (e == 0)
@@ -66,6 +21,18 @@ int is_str_num(char *s, int e)
 	return (1);
 }
 
+void	dp_free(char **dp)
+{
+	int i;
+
+	i = 0;
+	while (dp[i])
+	{
+		free(dp[i++]);
+	}
+	free(dp);
+}
+
 unsigned long dp_len(char **dp)
 {
 	int i = 0;
@@ -75,10 +42,11 @@ unsigned long dp_len(char **dp)
 	return (i);
 }
 
-int ip_checker(char *iprd, char *ipwr)
+int ip_checker(char *iprd, char **ipwr)
 {
 	char **octects = ft_split(iprd, '.');
 
+	ft_bzero(ipwr, 0);
 	if (dp_len(octects) != 4)
 		return (-1);
 	for (unsigned long i = 0; i < 4; i++)
@@ -86,12 +54,38 @@ int ip_checker(char *iprd, char *ipwr)
 		if (ft_strlen(octects[i]) > 3 || is_str_num(octects[i], 0) == -1)
 			return (-1);
 	}
-	return (copy_data(iprd, ipwr, 0));
+	dp_free(octects);
+	*ipwr = iprd;
+	return (OK);
+}
+
+int mac_checker(char *macrd, char **macwr)
+{
+	char **hex_addr = ft_split(macrd, ':');
+
+	ft_bzero(macwr, 0);
+	if (dp_len(hex_addr) != 6)
+		return (-1);
+	for (unsigned long i = 0; i < 6; i++)
+	{
+		if (ft_strlen(hex_addr[i]) > 2 || is_str_num(hex_addr[i], 1) == -1)
+			return (-1);
+	}
+	dp_free(hex_addr);
+	*macwr = macrd;
+	return (OK);
 }
 
 int parse_args(char **argv, struct  Target *t, struct Source *s)
 {
-	if (ip_checker(argv[0], &t->ip_addr[0]) == -1 || ip_checker(argv[2], &s->ip_addr[0]) == -1)
+	t->ip_addr = NULL;
+	s->ip_addr = NULL;
+	t->mac_addr = NULL;
+	s->mac_addr = NULL;
+	if (ip_checker(argv[0], &t->ip_addr) == -1 || ip_checker(argv[2], &s->ip_addr) == -1)
 		return (IP_ERR);
+	if (mac_checker(argv[1], &t->mac_addr) == -1 || mac_checker(argv[3], &s->mac_addr) == -1)
+		return (MAC_ERR);
+	printf("eey: %s\n", t->ip_addr);
 	return (OK);
 }
