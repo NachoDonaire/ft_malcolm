@@ -2,6 +2,13 @@
 #include <libft.h>
 #include <parser.h>
 
+int ft_ishex(char c)
+{
+	if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f'))
+		return (1);
+	return (0);
+}
+
 int is_str_num(char *s, int e)
 {
 	if (e == 0)
@@ -15,7 +22,7 @@ int is_str_num(char *s, int e)
 	}
 	for (unsigned long i = 0; i < ft_strlen(s); i++)
 	{
-		if (!ft_isdigit(s[i]) && !ft_isalpha(s[i]))
+		if (!ft_isdigit(s[i]) && !ft_ishex(s[i]))
 			return (-1);
 	}
 	return (1);
@@ -44,6 +51,8 @@ unsigned long dp_len(char **dp)
 
 int ip_checker(char *iprd, char **ipwr)
 {
+	if  (iprd[0] == '.' || iprd[ft_strlen(iprd) - 1] == '.')
+		return (-1);
 	char **octects = ft_split(iprd, '.');
 
 	ft_bzero(ipwr, 0);
@@ -61,6 +70,8 @@ int ip_checker(char *iprd, char **ipwr)
 
 int mac_checker(char *macrd, char **macwr)
 {
+	if  (macrd[0] == ':' || macrd[ft_strlen(macrd) - 1] == ':')
+		return (-1);
 	char **hex_addr = ft_split(macrd, ':');
 
 	ft_bzero(macwr, 0);
