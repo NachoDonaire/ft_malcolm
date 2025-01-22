@@ -61,6 +61,8 @@ int main(int argc, char **argv)
 	//int	nnreadd;
 	//struct sockaddr_ll	sll;
 
+	//printf("ethhdr size: %lu\n", sizeof(struct ether_arp*));
+	//printf("uint8_t size: %lu\n", sizeof(uint8_t));
 	if (argc != 5 || argv[0] == NULL)
 		return (fatal_error(NARG_ERR));
 
@@ -72,19 +74,21 @@ int main(int argc, char **argv)
 		fatal_error(SOCKET_ERR);
 	}
 
-	while (1) {
-		if (recvfrom(sockfd, buffer, sizeof(buffer), 0, NULL, NULL) < 0) {
+	while (1)
+	{
+		if (recvfrom(sockfd, buffer, sizeof(buffer), 0, NULL, NULL) < 0) 
+		{
 			fatal_error(0);
+			return 0;
 		}
 
-		// Verificar si es un paquete ARP
 		struct ethhdr *eth = (struct ethhdr *)buffer;
 		if (ntohs(eth->h_proto) == ETH_P_ARP) {
 			arp = (struct ether_arp *)(buffer + ETH_HDRLEN);
 
-			// Verificar si es una solicitud ARP
-			if (ntohs(arp->ea_hdr.ar_op) == ARPOP_REQUEST) {
-				printf("Solicitud ARP recibida\n");
+			if (ntohs(arp->ea_hdr.ar_op) == ARPOP_REQUEST) 
+			{
+				printf("Solicitud ARP recibida procedente de: %s\n", eth->h_source);
 			}
 		}
 	}
