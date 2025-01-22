@@ -44,6 +44,8 @@ int fatal_error(int reason)
 		write_sentence(2, "Error in some mac address. Please, check both.\nFormat: ff:ff:ff:ff:ff:ff where ff represents a hexadecimal number\n");
 	else if  (reason == SOCKET_ERR)
 		write_sentence(2, "Error creating socket, exiting\n");
+	else
+		write_sentence(2, "Fatal error\n");
 	return (-1);
 }	
 
@@ -52,10 +54,12 @@ int main(int argc, char **argv)
 	struct Target	target;
 	struct Source	source;
 	int	parse_status;
-	int	sckt;
-	char	buff[BUFF_SIZE];
-	int	nnreadd;
-	struct sockaddr_ll	sll;
+	int	sockfd;
+	uint8_t buffer[ETH_HDRLEN + ARP_HDRLEN + 18];
+	struct ether_arp *arp;
+	//char	buff[BUFF_SIZE];
+	//int	nnreadd;
+	//struct sockaddr_ll	sll;
 
 	if (argc != 5 || argv[0] == NULL)
 		return (fatal_error(NARG_ERR));
@@ -64,26 +68,25 @@ int main(int argc, char **argv)
 	if (parse_status != OK)
 		return (fatal_error(parse_status));
 
-	sckt = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
-	if (sckt == -1)
-		return (fatal_error(SOCKET_ERR));
-	while (1)
-	{
-		int nread = recvfrom(sckt, buff, BUFF_SIZE, 0, (struct sockaddr *)&sll, (socklen_t*)sizeof((struct sockaddr *)&sll));
-		if (nread < 0)
-		{
-			//write_sentence(1, "No ha leido!!\n");
-			continue ;
+	if ((sockfd = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ARP))) < 0) {
+		fatal_error(SOCKET_ERR);
+	}
+
+	while (1) {
+		if (recvfrom(sockfd, buffer, sizeof(buffer), 0, NULL, NULL) < 0) {
+			fatal_error(0);
 		}
-		else
-		{
-			nnreadd = nread;
-			break ;
+
+		// Verificar si es un paquete ARP
+		struct ethhdr *eth = (struct ethhdr *)buffer;
+		if (ntohs(eth->h_proto) == ETH_P_ARP) {
+			arp = (struct ether_arp *)(buffer + ETH_HDRLEN);
+
+			// Verificar si es una solicitud ARP
+			if (ntohs(arp->ea_hdr.ar_op) == ARPOP_REQUEST) {
+				printf("Solicitud ARP recibida\n");
+			}
 		}
 	}
-	printf("eeejjj: %d\n", nnreadd);
-	printf("lo que ha leido: %s\n", buff);
-	//print_target(target);
-	//print_source(source);
 	return (0);
 }
