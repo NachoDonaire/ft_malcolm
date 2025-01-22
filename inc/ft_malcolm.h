@@ -6,8 +6,13 @@
 #include<linux/if_packet.h>
 #include<net/ethernet.h>
 #include <arpa/inet.h>
+#include <arpa/inet.h>
+#include <netinet/if_ether.h>
 
 #define BUFF_SIZE 1024
+
+#define ETH_HDRLEN 14
+#define ARP_HDRLEN 28
 
 enum status {
 	OK = 1,
