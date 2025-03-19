@@ -36,4 +36,7 @@ fclean : clean
 
 re : fclean $(NAME)
 
+up:
+	docker-compose -f ./docker-compose.yml up --build -d
+
 .PHONY: all clean fclean re 
