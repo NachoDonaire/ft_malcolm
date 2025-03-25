@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <signal.h>
 #include <sys/socket.h>
+#include <netinet/if_ether.h>
+#include <string.h>
 #include <errno.h>
 
 
