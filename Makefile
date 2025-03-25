@@ -9,7 +9,7 @@ DLBFT = ./libft
 
 
 FSRC = main \
-       parser
+#       parser
 
 ALLC = $(addsuffix .c, $(FSRC))
 SRC = $(addprefix src/, $(ALLC))
@@ -27,16 +27,29 @@ $(NAME) :  $(OBJ)
 	$(CC) $(CFLAGS) $(SRC) $(LDFLAGS) -o $(NAME)
 
 clean :
+	rm -rf obj/*.o
 	@make clean -C $(DLBFT)
-	rm -rf /obj/*.o
 
 fclean : clean
-	@make fclean -C $(DLBFT)
 	rm -rf $(NAME)
 
 re : fclean $(NAME)
 
+####### SCENARIO INSTRUCTIONS #######
+
 up:
 	docker-compose -f ./docker-compose.yml up --build -d
+
+down:
+	docker-compose -f ./docker-compose.yml down
+
+spoofer:
+	docker exec -it spoofer /bin/bash
+
+source:
+	docker exec -it source /bin/bash
+
+target:
+	docker exec -it target /bin/bash
 
 .PHONY: all clean fclean re 

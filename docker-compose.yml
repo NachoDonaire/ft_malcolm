@@ -1,6 +1,7 @@
 version: '3.9'
 services:
   target:
+    container_name: target
     build:
       context: ./scenario/target/.
       dockerfile: Dockerfile
@@ -8,6 +9,7 @@ services:
       malcolm_net:
         ipv4_address: 192.170.1.5
   source:
+    container_name: source
     build:
       context: ./scenario/source/.
       dockerfile: Dockerfile
@@ -15,6 +17,7 @@ services:
       malcolm_net:
         ipv4_address: 192.170.1.3
   spoofer:
+    container_name: spoofer
     build:
       context: ./scenario/spoofer/.
       dockerfile: Dockerfile
