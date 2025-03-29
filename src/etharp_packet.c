@@ -3,14 +3,34 @@
 #include <eter_arp.h>
 
 
+
+uint32_t	get_ippos(unsigned int pos, uint32_t rawson)
+{
+	uint32_t	dikie_wilkinson;
+	uint8_t		the_chosen_one;
+
+	dikie_wilkinson = rawson;
+	if (pos == 0)
+		the_chosen_one = dikie_wilkinson >> 24;
+	else if (pos == 1)
+		the_chosen_one = dikie_wilkinson >> 16;
+	else if (pos == 2)
+		the_chosen_one = dikie_wilkinson >> 8;
+	else
+		the_chosen_one = dikie_wilkinson;
+	
+	return the_chosen_one;
+}
+
 void	print_etarp(struct eter_arp etarp)
 {
 	printf("Hardware address space: %u\n", etarp.has);
 	printf("Protocol address space: %u\n", etarp.pas);
 	printf("Hardware address length: %u\n", etarp.hal);
 	printf("Protocol address length: %u\n", etarp.pal);
-	printf("############################\n");
+	printf("\n############################\n\n");
 	printf("opcode: %u\n", etarp.opcode);
+	printf("\n############################\n\n");
 	printf("source address --> ");
 	for (int i = 0; i < ADDR_LEN; i++)
 	{
@@ -19,7 +39,15 @@ void	print_etarp(struct eter_arp etarp)
 		else
 			printf("%x:", etarp.sender_address[i]);
 	}
-	printf("Sender protocol address: %u\n", etarp.sender_pro_address);
+	printf("source protocol address --> ");
+	for (unsigned int i = 0; i < FOUR; i++)
+	{
+		if (i == THREE)
+			printf("%u\n", get_ippos(i, etarp.sender_pro_address));
+		else
+			printf("%u:", get_ippos(i, etarp.sender_pro_address));
+	}
+	printf("\n############################\n\n");
 	printf("target address --> ");
 	for (int i = 0; i < ADDR_LEN; i++)
 	{
@@ -28,9 +56,15 @@ void	print_etarp(struct eter_arp etarp)
 		else
 			printf("%x:", etarp.target_address[i]);
 	}
-	printf("Target protocol address: %u\n", etarp.target_pro_address);
+	printf("target protocol address --> ");
+	for (unsigned int i = 0; i < FOUR; i++)
+	{
+		if (i == THREE)
+			printf("%u\n", get_ippos(i, etarp.target_pro_address));
+		else
+			printf("%u:", get_ippos(i, etarp.target_pro_address));
+	}
 }
-
 
 
 
@@ -104,5 +138,5 @@ void	parse_arp_packet(uint8_t *msg, struct eter_arp *arp)
 	packet_address(arp->target_address, msg);
 	msg += ADDR_LEN;
 	fillfourbytes(tpa, msg);
-	onetofour(spa, &(arp->target_pro_address));
+	onetofour(tpa, &(arp->target_pro_address));
 }
