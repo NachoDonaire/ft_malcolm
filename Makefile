@@ -9,6 +9,7 @@ DLBFT = ./libft
 
 
 FSRC = main \
+       etharp_packet \
 #       parser
 
 ALLC = $(addsuffix .c, $(FSRC))

@@ -1,5 +1,6 @@
 #include <general.h>
 #include <global.h>
+#include <eter_arp.h>
 
 
 Global data;
@@ -12,7 +13,30 @@ void	program_interruption()
 	return ;
 }
 
+void	print_raw_msg(unsigned char *msg, unsigned int size)
+{
+	unsigned int i;
 
+	i = 0;
+	while (i < size)
+		printf("%u, ", ntohs(msg[i++]));
+	printf("\n");
+}
+	
+
+void	print_data(char *dt, unsigned long t)
+{
+	unsigned int i;
+
+	i = 0;
+	while (i < t)
+		printf("%02x, ", dt[i++]);
+	/*i = 0;
+	while (i < t)
+		printf("%d, ", dt[i++]);
+		*/
+	printf("\n");
+}
 
 int fatal_error()
 {
@@ -29,10 +53,10 @@ int fatal_error()
 int main()
 {
 	struct	sigaction	sigact;
-	int			buf_size = EA_HDR_LEN + ETH_ALEN * TWO + PROT_ADRESS * TWO;
-	char			buf[buf_size + ONE];
+	int			buf_size = ARP_PACKET_SIZE;
+	unsigned char		buf[buf_size + ONE];
 	int			n_bytes_readen;
-	struct	ether_arp	etharp;
+	struct	eter_arp	etharp;
 
 	n_bytes_readen = 0;
 
@@ -48,7 +72,8 @@ int main()
 
 	//etharp = NULL;
 	//memset((struct ethhdr *)eth_header, 0, sizeof(struct ethhdr ));
-	memset(buf, 0, sizeof(char));
+	memset(&etharp, 0, sizeof(struct eter_arp));
+	memset(buf, 0, sizeof(buf));
 	while (data.go_on > 0)
 	{
 		n_bytes_readen = recvfrom(data.raw_socket, buf, buf_size, 0, NULL, 0);
@@ -57,14 +82,12 @@ int main()
 			return (fatal_error());
 		else
 		{
-			buf[n_bytes_readen] = 0;
-			memcpy(&etharp, buf, sizeof(etharp));
-			//etharp = (struct ether_arp )buf;
-			//size_t var_size = sizeof(etharp.ea_hdr);
-			//printf("joder ya estamos como chempre :)) : %lu\n", var_size);
-			printf("adressida del sender: %x:%x:%x:%x:%x:%x\n", ((&etharp + 8)->arp_sha[0]), ((etharp).arp_sha[1]),((etharp).arp_sha[2]),((etharp).arp_sha[3]), ((etharp).arp_sha[4]),((etharp).arp_sha[5]));
-			//printf("h_dest: %d\nh_source: %d\n", (eth_header.dst), ((eth_header + 6).src));
+			buf[n_bytes_readen + ONE] = 0;
+			print_raw_msg(buf, n_bytes_readen);
+			parse_arp_packet(buf + ETH_HEADER_SIZE, &etharp);
+			print_etarp(etharp);
 			data.go_on = -1;
+			close(data.raw_socket);
 		}
 	}
 
