@@ -9,8 +9,9 @@ DLBFT = ./libft
 
 
 FSRC = main \
-       etharp_packet \
-#       parser
+       arp_packet \
+       utils	\
+       ether_header
 
 ALLC = $(addsuffix .c, $(FSRC))
 SRC = $(addprefix src/, $(ALLC))
