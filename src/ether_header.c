@@ -7,17 +7,17 @@ void	print_eth_header(struct eth_header ethdr)
 	for (int i = 0; i < ADDR_LEN; i++)
 	{
 		if (i == FIVE)
-			printf("%x\n", ethdr.dest_ethaddr[i]);
+			printf("%02x\n", ethdr.dest_ethaddr[i]);
 		else
-			printf("%x:", ethdr.dest_ethaddr[i]);
+			printf("%02x:", ethdr.dest_ethaddr[i]);
 	}
 	printf("sender address --> ");
 	for (int i = 0; i < ADDR_LEN; i++)
 	{
 		if (i == FIVE)
-			printf("%x\n", ethdr.sender_ethaddr[i]);
+			printf("%02x\n", ethdr.sender_ethaddr[i]);
 		else
-			printf("%x:", ethdr.sender_ethaddr[i]);
+			printf("%02x:", ethdr.sender_ethaddr[i]);
 	}
 	printf("Protocol: 0x%u\n", ethdr.protocol);
 }

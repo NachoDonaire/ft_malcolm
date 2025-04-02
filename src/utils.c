@@ -1,6 +1,14 @@
 #include <utils.h>
 
+void	free_double_pointer(char **s)
+{
+	int i;
 
+	i = 0;
+	while (s[i])
+		free(s[i++]);
+	free(s);
+}
 
 uint32_t	get_ippos(unsigned int pos, uint32_t rawson)
 {

@@ -1,6 +1,6 @@
 FROM debian:bookworm
 
-RUN apt update && apt upgrade -y && apt install iproute2 iputils-arping -y
+RUN apt update && apt upgrade -y && apt install iproute2 iputils-arping net-tools -y
 
 COPY ../entrypoint.sh /
 COPY sendarp.sh /

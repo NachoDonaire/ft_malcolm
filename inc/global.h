@@ -7,6 +7,7 @@
 #define ARP_PROTOCOL 806
 #define PROT_ADRESS 4
 #define H_ADDR_L 6
+#define MAC_LEN 17
 #define TWO 2
 #define ONE 1
 #define FOUR 4
@@ -16,9 +17,14 @@
 #define ERROR -1
 #define OK 23
 
-typedef struct {
-	int raw_socket;
-	int go_on;
+typedef struct GlobalData {
+	int	raw_socket;
+	int	go_on;
+	char	*src_ip;
+	char	*src_addr;
+	char	*target_ip;
+	char	*target_addr;
 } Global;
+
 
 #endif

@@ -5,6 +5,10 @@ RUN apt update && apt upgrade -y && apt install iproute2 iputils-arping -y  && a
 
 RUN mkdir -p /ft_malcolm
 
+WORKDIR /ft_malcolm
+
+#RUN make re
+
 COPY entrypoint.sh /usr/bin/
 
 #ENTRYPOINT ["bash", "/etc/entrypoint.sh"]

@@ -18,9 +18,9 @@ void	print_arpdata(struct arp_packet arpdata)
 	for (int i = 0; i < ADDR_LEN; i++)
 	{
 		if (i == FIVE)
-			printf("%x\n", arpdata.sender_address[i]);
+			printf("%02x\n", arpdata.sender_address[i]);
 		else
-			printf("%x:", arpdata.sender_address[i]);
+			printf("%02x:", arpdata.sender_address[i]);
 	}
 	printf("source protocol address --> ");
 	for (unsigned int i = 0; i < FOUR; i++)
@@ -28,16 +28,16 @@ void	print_arpdata(struct arp_packet arpdata)
 		if (i == THREE)
 			printf("%u\n", get_ippos(i, arpdata.sender_pro_address));
 		else
-			printf("%u:", get_ippos(i, arpdata.sender_pro_address));
+			printf("%u.", get_ippos(i, arpdata.sender_pro_address));
 	}
 	printf("\n############################\n\n");
 	printf("target address --> ");
 	for (int i = 0; i < ADDR_LEN; i++)
 	{
 		if (i == FIVE)
-			printf("%x\n", arpdata.target_address[i]);
+			printf("%02x\n", arpdata.target_address[i]);
 		else
-			printf("%x:", arpdata.target_address[i]);
+			printf("%02x:", arpdata.target_address[i]);
 	}
 	printf("target protocol address --> ");
 	for (unsigned int i = 0; i < FOUR; i++)
@@ -45,7 +45,7 @@ void	print_arpdata(struct arp_packet arpdata)
 		if (i == THREE)
 			printf("%u\n", get_ippos(i, arpdata.target_pro_address));
 		else
-			printf("%u:", get_ippos(i, arpdata.target_pro_address));
+			printf("%u.", get_ippos(i, arpdata.target_pro_address));
 	}
 }
 

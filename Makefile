@@ -8,10 +8,12 @@ NLBFT = ./libft/libft.a
 DLBFT = ./libft
 
 
-FSRC = main \
-       arp_packet \
-       utils	\
-       ether_header
+FSRC = main		\
+       arp_packet	\
+       utils		\
+       ether_header	\
+       some_error	\
+       parser
 
 ALLC = $(addsuffix .c, $(FSRC))
 SRC = $(addprefix src/, $(ALLC))
