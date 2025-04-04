@@ -12,7 +12,7 @@ FSRC = main		\
        arp_packet	\
        utils		\
        ether_header	\
-       some_error	\
+       log		\
        parser
 
 ALLC = $(addsuffix .c, $(FSRC))

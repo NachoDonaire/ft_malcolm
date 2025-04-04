@@ -3,7 +3,7 @@
 #include <global.h>
 #include <general.h>
 #include <utils.h>
-#include <some_error.h>
+#include <log.h>
 
 int	is_hex(char e)
 {
@@ -11,7 +11,7 @@ int	is_hex(char e)
 	{
 		return (OK);
 	}
-	return (ERR_MAC_INVALID);
+	return (-1);
 }
 
 int	check_mac_address(char *mac)
@@ -19,17 +19,17 @@ int	check_mac_address(char *mac)
 	int i;
 
 	if (ft_strlen(mac) != MAC_LEN)
-		return (ERR_MAC_INVALID);
+		return (-1);
 	i = 0;
 	while (i < MAC_LEN)
 	{
 		if ((i + ONE) % THREE == 0 && mac[i] != ':')
-			return (ERR_MAC_INVALID);
+			return (-1);
 		else if ((i + ONE) % 3 != 0)
 		{
 			if (is_hex(mac[i]) != OK)
 			{
-				return (ERR_MAC_INVALID);
+				return (-1);
 			}
 		}
 		i++;
@@ -46,22 +46,22 @@ int parse_argv(char **argv, Global *data)
 	status = 1;
 
 	if ((status = inet_pton(AF_INET, argv[1], ips)) <= 0)
-		return (some_error(ERR_IP_INVALID));
+		return (ERR_IP_INVALID_ST);
 
 	if ((status = check_mac_address(argv[2])) < 0)
-		return (some_error(status));
+		return (ERR_MAC_INVALID_ST);
 
 	ft_memset(ips, 0, sizeof(struct in_addr));
 	if ((status = inet_pton(AF_INET, argv[3], ips)) <= 0)
-		return (some_error(ERR_IP_INVALID));
+		return (ERR_IP_INVALID_ND);
 
 	if ((status = check_mac_address(argv[4])) < 0)
-		return (some_error(status));
+		return (ERR_MAC_INVALID_ND);
 	
-	data->src_ip = argv[1];
-	data->src_addr = argv[2];
-	data->target_ip = argv[3];
-	data->target_addr = argv[4];
+	data->src_ip = ft_strdup(argv[1]);
+	data->src_addr = ft_strdup(argv[2]);
+	data->target_ip = ft_strdup(argv[3]);
+	data->target_addr = ft_strdup(argv[4]);
 
 	return (OK);
 }
