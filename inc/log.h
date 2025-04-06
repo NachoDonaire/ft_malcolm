@@ -20,7 +20,7 @@ enum status_type{
 int	write_on_error(char *s);
 void	print_addr(uint8_t *addr);
 void	print_ip(uint32_t ip);
-int	malcolm_log(char *s);
+int	malcolm_log(char *s, uint8_t *mac, uint32_t ip, int *n_bytes, unsigned char *buf);
 int	error_log(int error, char **argv);
 
 

@@ -11,12 +11,21 @@ int	write_on_error(char *s)
 	return (ERR);
 }
 
-int	malcolm_log(char *s)
+int	malcolm_log(char *s, uint8_t *mac, uint32_t ip, int *n_bytes, unsigned char *buf)
 {
 	int i = 0;
 
 	while (s[i])
 		write(1, &s[i++], 1);
+
+	if (*n_bytes == ONE)
+		print_addr(mac);
+	else if (*n_bytes == TWO)
+		print_ip(ip);
+
+	*n_bytes = 0;
+	ft_memset(buf, 0, sizeof(buf));
+
 	return (OK);
 }
 
@@ -38,7 +47,7 @@ void	print_ip(uint32_t ip)
 		if (i == THREE)
 			printf("%u\n", get_ippos(i, ip));
 		else
-			printf("%u:", get_ippos(i, ip));
+			printf("%u.", get_ippos(i, ip));
 	}
 }
 

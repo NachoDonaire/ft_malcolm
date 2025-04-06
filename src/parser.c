@@ -1,5 +1,3 @@
-#include <eth_header.h>
-#include <arp_packet.h>
 #include <global.h>
 #include <general.h>
 #include <utils.h>

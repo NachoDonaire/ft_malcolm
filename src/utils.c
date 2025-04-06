@@ -28,6 +28,55 @@ uint32_t	get_ippos(unsigned int pos, uint32_t rawson)
 	return the_chosen_one;
 }
 
+int	protocol_cmp(uint16_t p1, uint16_t p2)
+{
+	if (p1 == p2)
+		return (OK);
+	return (ERR);
+}
+
+int	macaddr_cmp(uint8_t *a, char *b)
+{
+	int		y;
+	char		byte[THREE];
+
+	y = 0;
+	ft_memset(byte, 0, sizeof(byte));
+
+	for (int i = 0; i < ADDR_LEN; i++)
+	{
+		if (b[y] == ':')
+			y++;
+		sprintf(byte, "%02x", a[i]);
+		if (byte[ZERO] != b[y] || byte[ONE] != b[y + ONE])
+			return (ERR);
+		ft_memset(byte, 0, sizeof(byte));
+		y += 2;
+	}
+	
+	return (OK);
+}
+
+int	check_request(struct arp_packet etharp, char *ip)
+{
+	unsigned char	raw_arg_ip[FOUR];
+	unsigned char	raw_pack_ip[FOUR];
+
+	ft_memset(raw_arg_ip, 0, FOUR);
+	ft_memset(raw_pack_ip, 0, FOUR);
+	for (int i = 0; i < FOUR; i++)
+		raw_pack_ip[i] = get_ippos(i, etharp.target_pro_address);
+	cpy_ip(raw_arg_ip, ip);
+	for (int i = 0; i < FOUR; i++)
+		if (raw_arg_ip[i] != raw_pack_ip[i])
+			return (ERR);
+	return (OK);
+}
+
+
+
+
+
 void	onetotwo(uint8_t wolfgang, uint8_t amadeus, uint16_t *m)
 {
 	*m = (wolfgang << 8) | amadeus;

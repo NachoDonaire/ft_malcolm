@@ -2,7 +2,6 @@
 #include <log.h>
 #include <utils.h>
 #include <global.h>
-#include <arp_packet.h>
 #include <eth_header.h>
 #include <parser.h>
 
@@ -34,54 +33,6 @@ int	initialize_data(struct sigaction *sigact, struct arp_packet *etharp, struct 
 
 	return (OK);
 }
-
-int	protocol_cmp(uint16_t p1, uint16_t p2)
-{
-	if (p1 == p2)
-		return (OK);
-	return (ERR);
-}
-
-int	macaddr_cmp(uint8_t *a, char *b)
-{
-	int		y;
-	char		byte[THREE];
-
-	y = 0;
-	ft_memset(byte, 0, sizeof(byte));
-
-	for (int i = 0; i < ADDR_LEN; i++)
-	{
-		if (b[y] == ':')
-			y++;
-		sprintf(byte, "%02x", a[i]);
-		if (byte[ZERO] != b[y] || byte[ONE] != b[y + ONE])
-			return (ERR);
-		ft_memset(byte, 0, sizeof(byte));
-		y += 2;
-	}
-	
-	return (OK);
-}
-
-int	check_request(struct arp_packet etharp, char *ip)
-{
-	unsigned char	raw_arg_ip[FOUR];
-	unsigned char	raw_pack_ip[FOUR];
-
-	ft_memset(raw_arg_ip, 0, FOUR);
-	ft_memset(raw_pack_ip, 0, FOUR);
-	for (int i = 0; i < FOUR; i++)
-		raw_pack_ip[i] = get_ippos(i, etharp.target_pro_address);
-	cpy_ip(raw_arg_ip, ip);
-	for (int i = 0; i < FOUR; i++)
-		if (raw_arg_ip[i] != raw_pack_ip[i])
-			return (ERR);
-	return (OK);
-}
-
-
-
 int main(int argc, char **argv)
 {
 	struct	sigaction	sigact;
@@ -117,11 +68,15 @@ int main(int argc, char **argv)
 				return (error_log(ERR_PROTOCOL, argv));
 			if (!macaddr_cmp(ethdata.sender_ethaddr, data.target_addr))
 			{
-				malcolm_log("Got a packet from a different source than requested: ");
+				n_bytes_ridden = ONE;
+				malcolm_log("Got a packet from a different MAC address than requested: ", ethdata.sender_ethaddr, ZERO, &n_bytes_ridden, buf);
+				/*
+				malcolm_log("Got a packet from a different MAC address than requested: ");
 				print_addr(ethdata.sender_ethaddr);
 				n_bytes_ridden = 0;
 				ft_memset(buf, 0, sizeof(buf));
 				ft_memset(&ethdata, 0, sizeof(struct eth_header));
+				*/
 			}
 			else
 			{
@@ -130,12 +85,16 @@ int main(int argc, char **argv)
 				parse_arp_packet(buf + ETH_HEADER_SIZE, &etharp);
 				if (!check_request(etharp, data.src_ip))
 				{
+					n_bytes_ridden = TWO;
+					malcolm_log("Got a packet from desired target but it is requesting other IP address: ", NULL, etharp.target_pro_address, &n_bytes_ridden, buf);
+					/*
 					malcolm_log("Got a packet from desired target but it is requesting other IP address: ");
 					print_ip(etharp.target_pro_address);
 					n_bytes_ridden = 0;
 					ft_memset(buf, 0, sizeof(buf));
 					ft_memset(&ethdata, 0, sizeof(struct eth_header));
 					ft_memset(&etharp, 0, sizeof(struct arp_packet));
+					*/
 				}
 				else
 				{
