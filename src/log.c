@@ -1,4 +1,5 @@
 #include <log.h>
+#include <utils.h>
 #include <unistd.h>
 
 int	write_on_error(char *s)
@@ -7,7 +8,7 @@ int	write_on_error(char *s)
 
 	while (s[i])
 		write(2, &s[i++], 1);
-	return (-1);
+	return (ERR);
 }
 
 int	malcolm_log(char *s)
@@ -27,6 +28,17 @@ void	print_addr(uint8_t *addr)
 			printf("%02x\n", addr[i]);
 		else
 			printf("%02x:", addr[i]);
+	}
+}
+
+void	print_ip(uint32_t ip)
+{
+	for (unsigned int i = 0; i < FOUR; i++)
+	{
+		if (i == THREE)
+			printf("%u\n", get_ippos(i, ip));
+		else
+			printf("%u:", get_ippos(i, ip));
 	}
 }
 

@@ -19,6 +19,7 @@ enum status_type{
 
 int	write_on_error(char *s);
 void	print_addr(uint8_t *addr);
+void	print_ip(uint32_t ip);
 int	malcolm_log(char *s);
 int	error_log(int error, char **argv);
 
