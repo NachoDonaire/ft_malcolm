@@ -57,6 +57,14 @@ int	macaddr_cmp(uint8_t *a, char *b)
 	return (OK);
 }
 
+int	is_broadcast(uint8_t *mac)
+{
+	for (int i = 0; i < ADDR_LEN; i++)
+		if (mac[i] != 255)
+			return (ERR);
+	return (OK);
+}
+
 int	check_request(struct arp_packet etharp, char *ip)
 {
 	unsigned char	raw_arg_ip[FOUR];

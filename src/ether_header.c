@@ -19,7 +19,7 @@ void	print_eth_header(struct eth_header ethdr)
 		else
 			printf("%02x:", ethdr.sender_ethaddr[i]);
 	}
-	printf("Protocol: %u\n", ethdr.protocol);
+	printf("Protocol: 0x%x\n", ethdr.protocol);
 }
 
 

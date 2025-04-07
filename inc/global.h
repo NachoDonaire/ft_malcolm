@@ -17,13 +17,17 @@
 #define THREE 3
 #define ERROR -1
 
+#include <netpacket/packet.h>
+
 typedef struct GlobalData {
-	int	raw_socket;
-	int	go_on;
-	char	*src_ip;
-	char	*src_addr;
-	char	*target_ip;
-	char	*target_addr;
+	int			raw_socket;
+	int			go_on;
+	struct sockaddr_ll	comminfo;
+	unsigned int		addrlen;
+	char			*src_ip;
+	char			*src_addr;
+	char			*target_ip;
+	char			*target_addr;
 } Global;
 
 

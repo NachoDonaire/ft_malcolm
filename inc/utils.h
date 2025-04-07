@@ -15,6 +15,7 @@ int		protocol_cmp(uint16_t p1, uint16_t p2);
 uint32_t	get_ippos(unsigned int pos, uint32_t rawson);
 int		macaddr_cmp(uint8_t *a, char *b);
 int		check_request(struct arp_packet etharp, char *ip);
+int		is_broadcast(uint8_t *mac);
 
 
 #endif

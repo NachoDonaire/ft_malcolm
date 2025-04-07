@@ -13,7 +13,8 @@ FSRC = main		\
        utils		\
        ether_header	\
        log		\
-       parser
+       parser		\
+       send_packet
 
 ALLC = $(addsuffix .c, $(FSRC))
 SRC = $(addprefix src/, $(ALLC))

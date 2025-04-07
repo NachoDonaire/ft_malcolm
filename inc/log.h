@@ -14,6 +14,7 @@ enum status_type{
 	ERR_SOCK,
 	ERR_RECVPACKET,
 	ERR_PROTOCOL,
+	ERR_SEND,
 	OK
 };
 

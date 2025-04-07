@@ -89,6 +89,9 @@ int error_log(int error, char **argv)
 		case ERR_PROTOCOL:
 			write_on_error("Package received may not follow ARP protocol\n");
 			break;
+		case ERR_SEND:
+			write_on_error("Error when sending response. Exit\n");
+			break;
 
 	}
 	return (ERR);

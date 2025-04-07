@@ -8,7 +8,7 @@
 void	print_arpdata(struct arp_packet arpdata)
 {
 	printf("Hardware address space: %u\n", arpdata.has);
-	printf("Protocol address space: %u\n", arpdata.pas);
+	printf("Protocol address space: 0x%x\n", arpdata.pas);
 	printf("Hardware address length: %u\n", arpdata.hal);
 	printf("Protocol address length: %u\n", arpdata.pal);
 	printf("\n############################\n\n");
