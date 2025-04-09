@@ -14,7 +14,8 @@ FSRC = main		\
        ether_header	\
        log		\
        parser		\
-       send_packet
+       send_packet	\
+       process_arp_packet
 
 ALLC = $(addsuffix .c, $(FSRC))
 SRC = $(addprefix src/, $(ALLC))

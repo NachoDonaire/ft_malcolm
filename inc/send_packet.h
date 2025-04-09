@@ -6,7 +6,7 @@
 #include <global.h>
 #include <log.h>
 
-int	send_packet(unsigned char *msg, char *ip, int sock, struct GlobalData *data);
+int	send_packet(unsigned char *msg, int sock, struct GlobalData *data);
 
 
 #endif

@@ -65,7 +65,7 @@ int	is_broadcast(uint8_t *mac)
 	return (OK);
 }
 
-int	check_request(struct arp_packet etharp, char *ip)
+int	ip_rwpntr_cmp(uint32_t addr, char *ip)
 {
 	unsigned char	raw_arg_ip[FOUR];
 	unsigned char	raw_pack_ip[FOUR];
@@ -73,7 +73,7 @@ int	check_request(struct arp_packet etharp, char *ip)
 	ft_memset(raw_arg_ip, 0, FOUR);
 	ft_memset(raw_pack_ip, 0, FOUR);
 	for (int i = 0; i < FOUR; i++)
-		raw_pack_ip[i] = get_ippos(i, etharp.target_pro_address);
+		raw_pack_ip[i] = get_ippos(i, addr);
 	cpy_ip(raw_arg_ip, ip);
 	for (int i = 0; i < FOUR; i++)
 		if (raw_arg_ip[i] != raw_pack_ip[i])

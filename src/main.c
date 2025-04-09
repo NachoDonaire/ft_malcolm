@@ -1,4 +1,5 @@
 #include <general.h>
+#include <process_arp_packet.h>
 #include <log.h>
 #include <utils.h>
 #include <global.h>
@@ -45,7 +46,6 @@ int main(int argc, char **argv)
 	struct	arp_packet	etharp;
 	struct	eth_header	ethdata;
 	int			status;
-	unsigned char		response[ARP_PACKET_SIZE];
 
 	if (argc != 5)
 		return (error_log(ERR_NPARAMS, argv));
@@ -63,14 +63,18 @@ int main(int argc, char **argv)
 		if (!data.go_on)
 			return (0);
 
-		if (n_bytes_ridden < ETH_HEADER_SIZE)
+		if (n_bytes_ridden < ZERO)
 			return (error_log(ERR_RECVPACKET, argv));
+		else if (n_bytes_ridden < ARP_PACKET_SIZE)
+		{
+				n_bytes_ridden = -1;
+				malcolm_log("Packet size does not match with arp size", ethdata.sender_ethaddr, ZERO, &n_bytes_ridden, buf);
+		}
 		else
 		{
 			parse_eth_header(buf, &ethdata);
 			if ((!protocol_cmp(ethdata.protocol, ARP_PROTOCOL)))
 				return (error_log(ERR_PROTOCOL, argv));
-			//printf("EEEEEEEEEEEE: %d\n", macaddr_cmp(ethdata.sender_ethaddr, data.target_addr));
 			if (!macaddr_cmp(ethdata.sender_ethaddr, data.target_addr))
 			{
 				n_bytes_ridden = ONE;
@@ -83,40 +87,12 @@ int main(int argc, char **argv)
 			}
 			else
 			{
-				print_eth_header(ethdata);
-				printf("\n\n\n");
-				parse_arp_packet(buf + ETH_HEADER_SIZE, &etharp);
-
-				if (!check_request(etharp, data.src_ip))
-				{
-					n_bytes_ridden = TWO;
-					malcolm_log("Got packet from desired target but it is requesting other IP address: ", NULL, etharp.target_pro_address, &n_bytes_ridden, buf);
-				}
-				else
-				{
-					//printf("CHECK REQUEST: %d\n", check_request(etharp, data.src_ip));
-					print_arpdata(etharp);
-					printf("\n\n\n");
-					ft_memset(response, 0, sizeof(response));
-					//printf("eeeeeeeeeeeeeeeeeeeeeeeeeeeee :%s\n ", data.target_addr);
-					printf("\n\n\n");
-					generate_arp_packet(data.target_addr, data.target_ip, data.src_addr, data.src_ip, REPLY, response);
-					//sleep(1);
-					if (send_packet(response, data.src_ip, data.raw_socket, &data) != OK)
-						return (error_log(ERR_SEND, argv));
-					struct	eth_header	response_header;
-					parse_eth_header(response, &response_header);
-					print_eth_header(response_header);
-					struct	arp_packet	reply;
-					parse_arp_packet(response + ETH_HEADER_SIZE, &reply);
-					print_arpdata(reply);
-					data.go_on = ZERO;
-					close(data.raw_socket);
-				}
+				status = malcolm_process(buf, &data, &n_bytes_ridden, argv);
+				if (status != OK)
+					return (status);
 			}
-			
-
 		}
+		
 	}
 
 	return (0);
